@@ -7,6 +7,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+import com.example.cyberquest.ui.puzzle.PasswordCrackerPuzzle
+
 @Composable
 fun PasswordCrackerPuzzle(
     correctPassword: String = "357",
@@ -23,7 +25,9 @@ fun PasswordCrackerPuzzle(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxSize().padding(24.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp)
     ) {
         Text("Password Cracker", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(8.dp))

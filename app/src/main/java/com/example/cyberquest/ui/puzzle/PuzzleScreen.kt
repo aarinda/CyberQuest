@@ -62,9 +62,9 @@ fun PuzzleScreen(navController: NavController, levelId: String?, modifier: Modif
                         onFailed = { showFailureDialog = true }
                     )
                     PuzzleType.CAESAR_CIPHER -> {
-                        val (shift, encodedText) = level.extra?.split("|")?.let {
-                            it[0].toIntOrNull() ?: 3 to (it.getOrNull(1) ?: "")
-                        } ?: (3 to "")
+                        val extraParts = level.extra?.split("|") ?: listOf()
+                        val shift = extraParts.getOrNull(0)?.toIntOrNull() ?: 3
+                        val encodedText = extraParts.getOrNull(1) ?: ""
                         CaesarCipherPuzzle(
                             encodedText = encodedText,
                             shift = shift,
@@ -190,62 +190,6 @@ fun PuzzleScreen(navController: NavController, levelId: String?, modifier: Modif
                 }
             }
         )
-    }
-}
-
-// --- PasswordCrackerPuzzle remains as previously implemented ---
-
-@Composable
-fun PasswordCrackerPuzzle(
-    correctPassword: String = "357",
-    maxTries: Int = 5,
-    onSolved: () -> Unit = {},
-    onFailed: () -> Unit = {}
-) {
-    var input by remember { mutableStateOf("") }
-    var tries by remember { mutableStateOf(0) }
-    var message by remember { mutableStateOf("") }
-    var solved by remember { mutableStateOf(false) }
-    var failed by remember { mutableStateOf(false) }
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxSize().padding(24.dp)
-    ) {
-        Text("Password Cracker", style = MaterialTheme.typography.headlineMedium)
-        Spacer(modifier = Modifier.height(8.dp))
-        Text("Guess the 3-digit code. You have ${maxTries - tries} tries left.")
-        Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(
-            value = input,
-            onValueChange = { if (it.length <= 3) input = it },
-            label = { Text("Enter code") },
-            enabled = !solved && !failed
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(
-            onClick = {
-                tries++
-                if (input == correctPassword) {
-                    message = "Correct! You cracked the password."
-                    solved = true
-                    onSolved()
-                } else if (tries >= maxTries) {
-                    message = "Out of tries! The code was $correctPassword."
-                    failed = true
-                    onFailed()
-                } else {
-                    message = "Incorrect. Try again."
-                }
-                input = ""
-            },
-            enabled = !solved && !failed && input.length == 3
-        ) {
-            Text("Submit")
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(message)
     }
 }
 

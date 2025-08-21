@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview // Keep for previewing specific screens
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -83,30 +82,5 @@ fun CyberQuestApp(navController: NavHostController = rememberNavController()) {
         composable(NavRoutes.ABOUT) {
             AboutScreen(navController = navController)
         }
-    }
-}
-
-
-@Preview(showBackground = true, name = "Main Menu Preview")
-@Composable
-fun MainMenuPreview() {
-    CyberQuestTheme {
-        MainMenuScreen(navController = rememberNavController())
-    }
-}
-
-@Preview(showBackground = true, name = "Level List Preview")
-@Composable
-fun LevelListPreview() {
-    CyberQuestTheme {
-        LevelListScreen(navController = rememberNavController())
-    }
-}
-
-@Preview(showBackground = true, name = "Puzzle Screen Preview")
-@Composable
-fun PuzzleScreenPreview() {
-    CyberQuestTheme {
-        PuzzleScreen(navController = rememberNavController(), levelId = "preview_id_1")
     }
 }
