@@ -12,5 +12,7 @@ data class Level(
     val description: String,
     val type: PuzzleType,
     val solution: String,
-    val extra: String? = null // For things like cipher shift, encoded text, etc.
+    val extra: String? = null,
+    val coins: Int = 10,
+    val badges: Int = 0
 )

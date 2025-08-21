@@ -1,85 +1,173 @@
 package com.example.cyberquest.ui.puzzle
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.cyberquest.data.ProgressManager
 import com.example.cyberquest.model.LevelRepository
 import com.example.cyberquest.model.PuzzleType
-import androidx.compose.ui.platform.LocalContext
-import com.example.cyberquest.data.ProgressManager
 import kotlinx.coroutines.launch
-import androidx.compose.runtime.rememberCoroutineScope
 
 @Composable
 fun PuzzleScreen(navController: NavController, levelId: String?, modifier: Modifier = Modifier) {
     var showSuccessDialog by remember { mutableStateOf(false) }
     var showFailureDialog by remember { mutableStateOf(false) }
-    val level = levelId?.let { com.example.cyberquest.model.LevelRepository.getLevelById(it) }
+    var showConfetti by remember { mutableStateOf(false) }
+    val level = levelId?.let { LevelRepository.getLevelById(it) }
 
     val context = LocalContext.current
     val progressManager = remember { ProgressManager(context) }
     val coroutineScope = rememberCoroutineScope()
 
-    Column(
+    // Use per-level rewards if available, else default
+    val coinsEarned = level?.coins ?: 10
+    val badgesEarned = level?.badges ?: if (level?.type == PuzzleType.PASSWORD_CRACKER) 1 else 0
+
+    Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+            .padding(16.dp)
     ) {
-        if (level != null) {
-            when (level.type) {
-                com.example.cyberquest.model.PuzzleType.PASSWORD_CRACKER -> PasswordCrackerPuzzle(
-                    correctPassword = level.solution,
-                    maxTries = 5,
-                    onSolved = {
-                        coroutineScope.launch {
-                            progressManager.markLevelCompleted(level.id, coinsEarned = 10)
-                        }
-                        showSuccessDialog = true
-                    },
-                    onFailed = { showFailureDialog = true }
-                )
-                com.example.cyberquest.model.PuzzleType.CAESAR_CIPHER -> {
-                    val (shift, encodedText) = level.extra?.split("|")?.let {
-                        it[0].toIntOrNull() ?: 3 to (it.getOrNull(1) ?: "")
-                    } ?: (3 to "")
-                    CaesarCipherPuzzle(
-                        encodedText = encodedText,
-                        shift = shift,
-                        solution = level.solution,
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            if (level != null) {
+                when (level.type) {
+                    PuzzleType.PASSWORD_CRACKER -> PasswordCrackerPuzzle(
+                        correctPassword = level.solution,
+                        maxTries = 5,
                         onSolved = {
                             coroutineScope.launch {
-                                progressManager.markLevelCompleted(level.id, coinsEarned = 10)
+                                progressManager.markLevelCompleted(level.id, coinsEarned, badgesEarned)
                             }
+                            showConfetti = true
                             showSuccessDialog = true
                         },
                         onFailed = { showFailureDialog = true }
                     )
+                    PuzzleType.CAESAR_CIPHER -> {
+                        val (shift, encodedText) = level.extra?.split("|")?.let {
+                            it[0].toIntOrNull() ?: 3 to (it.getOrNull(1) ?: "")
+                        } ?: (3 to "")
+                        CaesarCipherPuzzle(
+                            encodedText = encodedText,
+                            shift = shift,
+                            solution = level.solution,
+                            onSolved = {
+                                coroutineScope.launch {
+                                    progressManager.markLevelCompleted(level.id, coinsEarned, badgesEarned)
+                                }
+                                showConfetti = true
+                                showSuccessDialog = true
+                            },
+                            onFailed = { showFailureDialog = true }
+                        )
+                    }
+                    // Add more puzzle types here
                 }
-                // Add more puzzle types here
+            } else {
+                Text("Puzzle not found.", color = MaterialTheme.colorScheme.error)
             }
-        } else {
-            Text("Puzzle not found.", color = MaterialTheme.colorScheme.error)
+            Spacer(modifier = Modifier.height(20.dp))
+            Button(onClick = { navController.popBackStack() }) {
+                Text("Back to Level List")
+            }
         }
-        Spacer(modifier = Modifier.height(20.dp))
-        Button(onClick = { navController.popBackStack() }) {
-            Text("Back to Level List")
+
+        // --- Animated Confetti/Reward Icon ---
+        AnimatedVisibility(
+            visible = showConfetti,
+            enter = fadeIn(),
+            exit = fadeOut(),
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 48.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = Icons.Default.EmojiEvents,
+                    contentDescription = "Trophy",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(48.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = "Star",
+                    tint = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.size(40.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "You earned $coinsEarned coins${if (badgesEarned > 0) " and $badgesEarned badge(s)" else ""}!",
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
         }
     }
 
     if (showSuccessDialog) {
         AlertDialog(
-            onDismissRequest = { showSuccessDialog = false },
+            onDismissRequest = {
+                showSuccessDialog = false
+                showConfetti = false
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.EmojiEvents,
+                    contentDescription = "Trophy",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(40.dp)
+                )
+            },
             title = { Text("Congratulations!") },
-            text = { Text("You solved the puzzle!") },
+            text = {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text("You solved the puzzle!")
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.Star,
+                            contentDescription = "Star",
+                            tint = MaterialTheme.colorScheme.secondary,
+                            modifier = Modifier.size(28.dp)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Coins: $coinsEarned")
+                        if (badgesEarned > 0) {
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Icon(
+                                imageVector = Icons.Default.EmojiEvents,
+                                contentDescription = "Badge",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(28.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text("Badges: $badgesEarned")
+                        }
+                    }
+                }
+            },
             confirmButton = {
                 Button(onClick = {
                     showSuccessDialog = false
+                    showConfetti = false
                     navController.popBackStack()
                 }) {
                     Text("OK")
