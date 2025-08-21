@@ -91,7 +91,7 @@ fun CyberQuestApp(navController: NavHostController = rememberNavController()) {
 @Composable
 fun MainMenuPreview() {
     CyberQuestTheme {
-        PlaceholderMainMenuScreen(navController = rememberNavController())
+        MainMenuScreen(navController = rememberNavController())
     }
 }
 
@@ -99,7 +99,7 @@ fun MainMenuPreview() {
 @Composable
 fun LevelListPreview() {
     CyberQuestTheme {
-        PlaceholderLevelListScreen(navController = rememberNavController())
+        LevelListScreen(navController = rememberNavController())
     }
 }
 
@@ -107,6 +107,6 @@ fun LevelListPreview() {
 @Composable
 fun PuzzleScreenPreview() {
     CyberQuestTheme {
-        PlaceholderPuzzleScreen(navController = rememberNavController(), levelId = "preview_id_1")
+        PuzzleScreen(navController = rememberNavController(), levelId = "preview_id_1")
     }
 }
