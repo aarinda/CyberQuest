@@ -29,6 +29,7 @@ import com.example.cyberquest.ui.puzzle.PuzzleScreen
 import com.example.cyberquest.ui.howtoplay.HowToPlayScreen
 import com.example.cyberquest.ui.settings.SettingsScreen
 import com.example.cyberquest.ui.about.AboutScreen
+import com.example.cyberquest.ui.background.CyberQuestBackground
 import com.example.cyberquest.ui.theme.CyberQuestTheme
 
 // Define route constants for better maintainability
@@ -49,10 +50,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             CyberQuestTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
+                CyberQuestBackground {
                     CyberQuestApp()
                 }
             }
