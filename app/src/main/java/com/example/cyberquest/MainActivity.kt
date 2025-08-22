@@ -80,5 +80,17 @@ fun CyberQuestApp(navController: NavHostController = rememberNavController()) {
         composable(NavRoutes.ABOUT) {
             AboutScreen(navController = navController)
         }
+        composable("login") {
+            LoginScreen(navController = navController)
+        }
+        composable("signup") {
+            SignUpScreen(navController = navController)
+        }
+        composable("forgot_password") {
+            ForgotPasswordScreen(navController = navController)
+        }
+        composable("guest_home") {
+            GuestHomeScreen(navController = navController)
+        }
     }
 }
