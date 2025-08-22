@@ -29,6 +29,10 @@ import com.example.cyberquest.ui.puzzle.PuzzleScreen
 import com.example.cyberquest.ui.howtoplay.HowToPlayScreen
 import com.example.cyberquest.ui.settings.SettingsScreen
 import com.example.cyberquest.ui.about.AboutScreen
+import com.example.cyberquest.ui.auth.ForgotPasswordScreen
+import com.example.cyberquest.ui.auth.GuestHomeScreen
+import com.example.cyberquest.ui.auth.LoginScreen
+import com.example.cyberquest.ui.auth.SignUpScreen
 import com.example.cyberquest.ui.background.CyberQuestBackground
 import com.example.cyberquest.ui.theme.CyberQuestTheme
 
