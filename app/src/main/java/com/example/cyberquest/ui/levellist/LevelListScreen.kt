@@ -7,7 +7,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.cyberquest.NavRoutes
 import com.example.cyberquest.model.LevelRepository
 
 @Composable
@@ -22,7 +21,7 @@ fun LevelListScreen(navController: NavController, modifier: Modifier = Modifier)
     ) {
         Text("Select a Level", style = MaterialTheme.typography.headlineMedium)
         levels.forEach { level ->
-            Button(onClick = { navController.navigate(NavRoutes.puzzleRoute(level.id)) }) {
+            Button(onClick = { navController.navigate("puzzle/${level.id}") }) {
                 Text("${level.title}")
             }
         }
