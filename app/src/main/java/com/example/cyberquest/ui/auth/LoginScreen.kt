@@ -6,7 +6,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -19,7 +19,14 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(
+    navController: NavController,
+    onLoginSuccess: () -> Unit
+) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var error by remember { mutableStateOf<String?>(null) }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -64,12 +71,31 @@ fun LoginScreen(navController: NavController) {
                 textAlign = TextAlign.Center
             )
 
-            // Onboarding Carousel (show only on first launch)
-            // OnboardingCarousel()
-
+            Spacer(modifier = Modifier.height(24.dp))
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Email") },
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Password") },
+                visualTransformation = PasswordVisualTransformation(),
+                modifier = Modifier.fillMaxWidth()
+            )
             Spacer(modifier = Modifier.height(24.dp))
             Button(
-                onClick = { navController.navigate("email_login") },
+                onClick = {
+                    // TODO: Replace with real authentication logic
+                    if (email.isNotBlank() && password.isNotBlank()) {
+                        onLoginSuccess()
+                    } else {
+                        error = "Please enter email and password."
+                    }
+                },
                 shape = RoundedCornerShape(32.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00C9FF)),
                 modifier = Modifier
@@ -77,25 +103,21 @@ fun LoginScreen(navController: NavController) {
                     .height(56.dp)
                     .shadow(8.dp, shape = RoundedCornerShape(32.dp))
             ) {
-                Text("Sign in with Email", color = Color.White, fontSize = 18.sp)
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                onClick = { navController.navigate("guest_home") },
-                shape = RoundedCornerShape(32.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF8F00FF)),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .shadow(8.dp, shape = RoundedCornerShape(32.dp))
-            ) {
-                Text("Continue as Guest", color = Color.White, fontSize = 18.sp)
+                Text("Login", color = Color.White, fontSize = 18.sp)
             }
             Spacer(modifier = Modifier.height(16.dp))
             TextButton(
                 onClick = { navController.navigate("sign_up") }
             ) {
                 Text("Don't have an account? Sign Up", color = Color.Cyan)
+            }
+            if (error != null) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(error!!, color = MaterialTheme.colorScheme.error)
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            TextButton(onClick = { navController.navigate("auth") }) {
+                Text("Back")
             }
         }
     }
