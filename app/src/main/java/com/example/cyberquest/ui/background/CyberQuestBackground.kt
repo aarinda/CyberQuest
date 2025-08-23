@@ -14,12 +14,16 @@ fun CyberQuestBackground(content: @Composable () -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .background(
-                brush = Brush.verticalGradient(
+                brush = Brush.linearGradient(
                     colors = listOf(
-                        Color(0xFF0F2027), // Dark blue
-                        Color(0xFF2C5364), // Lighter blue
-                        Color(0xFF00C9FF)  // Accent cyan
-                    )
+                        Color(0xFF0B1D26), // Deep Night
+                        Color(0xFF00FFB4), // Aurora Green
+                        Color(0xFF00FFC6), // Aurora Teal
+                        Color(0xFF00CFFF), // Aurora Blue
+                        Color(0xFF7F5FFF)  // Aurora Purple (optional, for a hint)
+                    ),
+                    start = androidx.compose.ui.unit.Offset(0f, 0f),
+                    end = androidx.compose.ui.unit.Offset(1000f, 2000f)
                 )
             )
     ) {
