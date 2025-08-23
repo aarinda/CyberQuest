@@ -18,6 +18,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.cyberquest.ui.theme.AuroraGreen
+import com.example.cyberquest.ui.theme.AuroraTeal
 
 @Composable
 fun LoginScreen(
@@ -76,14 +78,14 @@ fun LoginScreen(
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email") },
+                label = { Text("Email", color = AuroraTeal) },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Password") },
+                label = { Text("Password", color = AuroraTeal) },
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -98,7 +100,7 @@ fun LoginScreen(
                     }
                 },
                 shape = RoundedCornerShape(32.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00C9FF)),
+                colors = ButtonDefaults.buttonColors(containerColor = AuroraGreen),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)
@@ -106,19 +108,16 @@ fun LoginScreen(
             ) {
                 Text("Login", color = Color.White, fontSize = 18.sp)
             }
-            Spacer(modifier = Modifier.height(16.dp))
-            TextButton(
-                onClick = { navController.navigate("sign_up") }
-            ) {
-                Text("Don't have an account? Sign Up", color = Color.Cyan)
-            }
             if (error != null) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(error!!, color = MaterialTheme.colorScheme.error)
             }
             Spacer(modifier = Modifier.height(16.dp))
-            TextButton(onClick = { navController.navigate("auth") }) {
-                Text("Back")
+            TextButton(onClick = { navController.navigate("sign_up") }) {
+                Text("Don't have an account? Sign Up", color = AuroraTeal)
+            }
+            TextButton(onClick = { navController.popBackStack() }) {
+                Text("Back", color = AuroraTeal)
             }
         }
     }
