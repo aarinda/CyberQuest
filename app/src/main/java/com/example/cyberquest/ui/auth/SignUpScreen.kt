@@ -8,6 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.cyberquest.ui.theme.AuroraGreen
+import com.example.cyberquest.ui.theme.AuroraTeal
 
 @Composable
 fun SignUpScreen(
@@ -26,25 +28,25 @@ fun SignUpScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text("Sign Up", style = MaterialTheme.typography.headlineMedium)
+        Text("Sign Up", style = MaterialTheme.typography.headlineMedium, color = AuroraGreen)
         Spacer(modifier = Modifier.height(24.dp))
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") }
+            label = { Text("Email", color = AuroraTeal) }
         )
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
+            label = { Text("Password", color = AuroraTeal) },
             visualTransformation = PasswordVisualTransformation()
         )
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = confirmPassword,
             onValueChange = { confirmPassword = it },
-            label = { Text("Confirm Password") },
+            label = { Text("Confirm Password", color = AuroraTeal) },
             visualTransformation = PasswordVisualTransformation()
         )
         Spacer(modifier = Modifier.height(24.dp))
@@ -56,7 +58,9 @@ fun SignUpScreen(
                 } else {
                     error = "Please check your input."
                 }
-            }
+            },
+            colors = ButtonDefaults.buttonColors(containerColor = AuroraGreen),
+            modifier = Modifier.fillMaxWidth()
         ) {
             Text("Create Account")
         }
@@ -66,10 +70,10 @@ fun SignUpScreen(
         }
         Spacer(modifier = Modifier.height(16.dp))
         TextButton(onClick = { navController.navigate("login") }) {
-            Text("Already have an account? Login")
+            Text("Already have an account? Login", color = AuroraTeal)
         }
         TextButton(onClick = { navController.popBackStack() }) {
-            Text("Back")
+            Text("Back", color = AuroraTeal)
         }
     }
 }
