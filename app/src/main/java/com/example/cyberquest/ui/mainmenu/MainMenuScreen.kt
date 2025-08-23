@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.cyberquest.NavRoutes
 import com.example.cyberquest.data.ProgressManager
 
 @Composable
@@ -30,7 +29,7 @@ fun MainMenuScreen(navController: NavController, modifier: Modifier = Modifier) 
         Text("Coins: ${progress.value.coins}")
         Text("Badges: ${progress.value.badges}")
         Spacer(modifier = Modifier.height(32.dp))
-        Button(onClick = { navController.navigate(NavRoutes.LEVEL_LIST) }) {
+        Button(onClick = { navController.navigate("level_list") }) {
             Text("Start Game")
         }
         Spacer(modifier = Modifier.height(16.dp))
