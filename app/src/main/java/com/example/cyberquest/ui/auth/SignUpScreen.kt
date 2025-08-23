@@ -5,15 +5,20 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 
 @Composable
-fun SignUpScreen(navController: NavController) {
+fun SignUpScreen(
+    navController: NavController,
+    onSignUpSuccess: () -> Unit
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+    var error by remember { mutableStateOf<String?>(null) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -43,10 +48,26 @@ fun SignUpScreen(navController: NavController) {
             visualTransformation = PasswordVisualTransformation()
         )
         Spacer(modifier = Modifier.height(24.dp))
-        Button(onClick = { /* TODO: Implement sign up logic */ }) {
+        Button(
+            onClick = {
+                // TODO: Replace with real sign up logic
+                if (email.isNotBlank() && password == confirmPassword && password.isNotBlank()) {
+                    onSignUpSuccess()
+                } else {
+                    error = "Please check your input."
+                }
+            }
+        ) {
             Text("Create Account")
         }
+        if (error != null) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(error!!, color = MaterialTheme.colorScheme.error)
+        }
         Spacer(modifier = Modifier.height(16.dp))
+        TextButton(onClick = { navController.navigate("login") }) {
+            Text("Already have an account? Login")
+        }
         TextButton(onClick = { navController.popBackStack() }) {
             Text("Back")
         }
