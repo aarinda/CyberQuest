@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
@@ -22,8 +23,8 @@ fun CyberQuestBackground(content: @Composable () -> Unit) {
                         Color(0xFF00CFFF), // Aurora Blue
                         Color(0xFF7F5FFF)  // Aurora Purple (optional, for a hint)
                     ),
-                    start = androidx.compose.ui.unit.Offset(0f, 0f),
-                    end = androidx.compose.ui.unit.Offset(1000f, 2000f)
+                    start = Offset(0f, 0f),
+                    end = Offset(1000f, 2000f)
                 )
             )
     ) {

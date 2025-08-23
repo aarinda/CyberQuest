@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.cyberquest.ui.theme.AuroraGreen
 import com.example.cyberquest.ui.theme.AuroraTeal
+import com.example.cyberquest.ui.theme.AuroraGreenDark
 
 @Composable
 fun LoginScreen(
@@ -100,7 +101,7 @@ fun LoginScreen(
                     }
                 },
                 shape = RoundedCornerShape(32.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = AuroraGreen),
+                colors = ButtonDefaults.buttonColors(containerColor = AuroraGreenDark),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)
