@@ -21,6 +21,10 @@ import androidx.navigation.NavController
 import com.example.cyberquest.ui.theme.AuroraGreen
 import com.example.cyberquest.ui.theme.AuroraTeal
 import com.example.cyberquest.ui.theme.AuroraGreenDark
+import com.example.cyberquest.data.AppDatabase
+import com.example.cyberquest.data.UserRepository
+import kotlinx.coroutines.launch
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun LoginScreen(
@@ -30,6 +34,16 @@ fun LoginScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var error by remember { mutableStateOf<String?>(null) }
+    var loading by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
+    // Initialize repository (in production, use DI)
+    val userRepository = remember {
+        val db = AppDatabase.getDatabase(context)
+        UserRepository(db.userDao())
+    }
 
     Box(
         modifier = Modifier
@@ -40,8 +54,6 @@ fun LoginScreen(
                 )
             )
     ) {
-        // TODO: Add faint glowing circuit lines as overlay
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -93,9 +105,18 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(24.dp))
             Button(
                 onClick = {
-                    // TODO: Replace with real authentication logic
+                    error = null
                     if (email.isNotBlank() && password.isNotBlank()) {
-                        onLoginSuccess()
+                        loading = true
+                        coroutineScope.launch {
+                            val success = userRepository.loginUser(email, password)
+                            loading = false
+                            if (success) {
+                                onLoginSuccess()
+                            } else {
+                                error = "Invalid email or password."
+                            }
+                        }
                     } else {
                         error = "Please enter email and password."
                     }
@@ -105,9 +126,18 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)
-                    .shadow(8.dp, shape = RoundedCornerShape(32.dp))
+                    .shadow(8.dp, shape = RoundedCornerShape(32.dp)),
+                enabled = !loading
             ) {
-                Text("Login", color = Color.White, fontSize = 18.sp)
+                if (loading) {
+                    CircularProgressIndicator(
+                        color = Color.White,
+                        modifier = Modifier.size(24.dp),
+                        strokeWidth = 2.dp
+                    )
+                } else {
+                    Text("Login", color = Color.White, fontSize = 18.sp)
+                }
             }
             if (error != null) {
                 Spacer(modifier = Modifier.height(8.dp))
