@@ -80,7 +80,7 @@ fun LoginScreen(
                 textAlign = TextAlign.Center
             )
             Text(
-                "Gamified Cybersecurity Awareness by PrysmSecure",
+                "Cybersecurity Awareness by PrysmSecure",
                 color = Color.LightGray,
                 fontSize = 16.sp,
                 modifier = Modifier.padding(top = 8.dp, bottom = 32.dp),
