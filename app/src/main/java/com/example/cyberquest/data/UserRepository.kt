@@ -1,4 +1,6 @@
-package com.example.cyberquest.dataimport com.example.cyberquest.util.SecurityUtils
+package com.example.cyberquest.data
+
+import com.example.cyberquest.util.SecurityUtils
 
 class UserRepository(private val userDao: UserDao) {
     suspend fun registerUser(username: String, password: String): Boolean {
